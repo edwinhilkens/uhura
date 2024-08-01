@@ -5,7 +5,7 @@ import requests
 
 broker_address="192.168.1.6"
 bathroom_player_address="192.168.1.29"
-rflink_address="192.168.1.6"
+rflink_address="192.168.1.94"
 
 def on_message(client, userdata, message):
     print("message topic=",message.topic)
@@ -20,35 +20,46 @@ def on_message(client, userdata, message):
     match message.topic:
 
         case "zigbee2mqtt/house/kitchen/shutter":
+
+            r =  "http://" + rflink_address + "/shutter?"
+
             match action:
 
                 case "1_single":
                     print("1 single")
+                    r = r + "close=4"
 
                 case "2_single":
                     print("2 single")
+                    r = r + "open=4"
                 
                 case "1_double":
                     print("1 double")
+                    r = r + "close=0"
 
                 case "2_double":
                     print("2 double")
+                    r = r + "open=0"
+
+            x = requests.get(r)
 
         case "zigbee2mqtt/house/bathroom/player":
+
+            print("bathroom player")
 
             r =  "http://" + bathroom_player_address + "/httpapi.asp?command="
 
             match action:
 
-                case ["1_single" | "2_single" | "3 single" | "4_single"]:
+                case "1_single" | "2_single" | "3 single" | "4_single":
                     print("single")
-                    r = r + "MCUKeyShortClick" + action[0]
-                    #x = requests.get(r)
+                    r = r + "MCUKeyShortClick:" + action[0]
+                    x = requests.get(r)
                 
-                case ["1_double" | "2_double" | "3_double" | "4_double"]:
+                case "1_double" | "2_double" | "3_double" | "4_double":
                     print("double")
-                    r = r + "SetPlayerCmd:stop"
-                    #x = requests.get(r)
+                    r = r + "setPlayerCmd:stop"
+                    x = requests.get(r)
 
         case "zigbee2mqtt/house/living/shutterlights":
             print("shutterlights")
