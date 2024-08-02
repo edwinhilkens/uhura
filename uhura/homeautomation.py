@@ -15,54 +15,57 @@ def on_message(client, userdata, message):
     m_decode=str(message.payload.decode("utf-8","ignore"))
     print("data Received",m_decode)
     m_in=json.loads(m_decode) #decode json data
-    action = m_in["action"]
 
-    match message.topic:
+    if 'action' in m_in:
 
-        case "zigbee2mqtt/house/kitchen/shutter":
+        action = m_in["action"]
 
-            r =  "http://" + rflink_address + "/shutter?"
-
-            match action:
-
-                case "1_single":
-                    print("1 single")
-                    r = r + "close=4"
-
-                case "2_single":
-                    print("2 single")
-                    r = r + "open=4"
-                
-                case "1_double":
-                    print("1 double")
-                    r = r + "close=0"
-
-                case "2_double":
-                    print("2 double")
-                    r = r + "open=0"
-
-            x = requests.get(r)
-
-        case "zigbee2mqtt/house/bathroom/player":
-
-            print("bathroom player")
-
-            r =  "http://" + bathroom_player_address + "/httpapi.asp?command="
-
-            match action:
-
-                case "1_single" | "2_single" | "3 single" | "4_single":
-                    print("single")
-                    r = r + "MCUKeyShortClick:" + action[0]
-                    x = requests.get(r)
-                
-                case "1_double" | "2_double" | "3_double" | "4_double":
-                    print("double")
-                    r = r + "setPlayerCmd:stop"
-                    x = requests.get(r)
-
-        case "zigbee2mqtt/house/living/shutterlights":
-            print("shutterlights")
+        match message.topic:
+    
+            case "zigbee2mqtt/house/kitchen/shutter":
+    
+                r =  "http://" + rflink_address + "/shutter?"
+    
+                match action:
+    
+                    case "1_single":
+                        print("1 single")
+                        r = r + "close=4"
+    
+                    case "2_single":
+                        print("2 single")
+                        r = r + "open=4"
+                    
+                    case "1_double":
+                        print("1 double")
+                        r = r + "close=0"
+    
+                    case "2_double":
+                        print("2 double")
+                        r = r + "open=0"
+    
+                x = requests.get(r)
+    
+            case "zigbee2mqtt/house/bathroom/player":
+    
+                print("bathroom player")
+    
+                r =  "http://" + bathroom_player_address + "/httpapi.asp?command="
+    
+                match action:
+    
+                    case "1_single" | "2_single" | "3 single" | "4_single":
+                        print("single")
+                        r = r + "MCUKeyShortClick:" + action[0]
+                        x = requests.get(r)
+                    
+                    case "1_double" | "2_double" | "3_double" | "4_double":
+                        print("double")
+                        r = r + "setPlayerCmd:stop"
+                        x = requests.get(r)
+    
+            case "zigbee2mqtt/house/living/shutterlights":
+                print("shutterlights")
 
     
     print("######################################################################", flush=True)
@@ -83,7 +86,7 @@ client.on_connect = on_connect
 client.on_subscribe = on_subscribe
 
 client.connect(broker_address) #connect to broker
-client.publish("zigbee2mqtt/foo","OFF")#publish
+#client.publish("zigbee2mqtt/foo","OFF")#publish
 client.subscribe("zigbee2mqtt/house/#")
 
 client.loop_forever() 
