@@ -1,0 +1,30 @@
+{
+    "FAUXMO": {
+        "ip_address": "auto"
+    },
+    "PLUGINS": {
+        "SimpleHTTPPlugin": {
+            "DEVICES": [
+                {
+                    "port": 12340,
+                    "on_cmd": "http://192.168.1.94/shutter?open=0",
+                    "off_cmd": "http://192.168.1.94/shutter?close=0",
+                    "method": "GET",
+                    "name": "Volets",
+		    "initial_state": "off",
+		    "use_fake_state": true
+                },
+                {
+                    "port": 12341,
+                    "on_cmd": "http://192.168.1.140/open",
+                    "off_cmd": "http://192.168.1.140/close",
+                    "method": "GET",
+                    "name": "Portail",
+		    "initial_state": "off",
+		    "use_fake_state": true
+                }
+            ]
+        }
+    }
+}
+

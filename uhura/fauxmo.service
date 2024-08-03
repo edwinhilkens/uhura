@@ -1,0 +1,16 @@
+[Unit]
+Description=Fauxmo
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/uhura/fauxmo
+# Fix the paths below:
+ExecStart=/usr/local/bin/fauxmo -c /home/pi/uhura/fauxmo.json -v
+Restart=on-failure
+RestartSec=10s
+User=pi
+
+[Install]
+WantedBy=multi-user.target
