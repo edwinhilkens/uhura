@@ -1,0 +1,1 @@
+/bin/sh -c "sudo systemctl restart uhura.service"
